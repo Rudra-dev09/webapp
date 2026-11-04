@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickMail</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='quick_mail.css')}}">
+    <!-- <link rel="stylesheet" href="D:\Rudra\WebApp\static\quick_mail.css"> -->
+</head>
+<body>
+    <div id="logo">Q</div>
 
+    <p id="name">QuickMail</p>
+
+    <div id="freeInbox">
+        <span id="circle"></span>
+        Free Inbox
+    </div>
+
+    <span id="signup">NO SIGN-UP NEEDED</span>
+
+    <h1 class="slogan">A little less inbox.</h1>
+    <h1 class="slogan" style="color: #6157E8; position: relative;top: 90px;">A lot more peace.</h1>
+    
+    <p id="intro">Get a real address and receive messages right here. No account or <br> personal details needed.</p>
+
+    <div id="generator">
+
+        <span id="eyebro">YOUR TEMPORARY ADDRESS</span>
+
+        <h2 id="ready">Ready when you are</h2>
+
+        <div id="inbox">
+
+            <span id="circle2"></span>
+            Inbox
+
+        </div>
+
+        <div id="email">
+
+            <span id="placeholder">{{email if email else "Create an email to start"}}</span>
+
+            <button id="btn" type="button">
+                <span>&#128196;</span>
+                Copy
+            </button>
+
+        </div>
+
+        <p id="xyz">Free inboxes are public: anyone who knows the address can read its messages. Don’t use it for sensitive accounts.</p>
+
+        <div id="creatediv">
+            <form action="/create-inbox" method="POST">
+
+            <button id="create" type="submit">&#9998; Create free inbox</button>
+
+            </form>
+
+            <span id="note">Messages are automatically deleted by the mail provider after 48 hours.</span>
+
+        </div>
+
+    </div>
+
+    <div id="linkdiv">
+        {% if web_url %}
+            <a href="{{web_url}}" id="link" target="_blank">Click to read messages</a>
+        
+        {% else %}
+        <span id="link">To read the messages click the generated link....</span>
+
+        {% endif %}
+
+    </div>
+
+    <script>
+        document.getElementById("btn").addEventListener("click", async function () {
+            const email = document.getElementById("placeholder").textContent.trim();
+
+            if (!email || email === "Create an email to start") {
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(email);
+            } catch (error) {
+                const textArea = document.createElement("textarea");
+                textArea.value = email;
+                textArea.style.position = "fixed";
+                textArea.style.opacity = "0";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                textArea.setSelectionRange(0, textArea.value.length);
+                const copied = document.execCommand("copy");
+                textArea.remove();
+
+                if (!copied) {
+                    alert("Could not copy the email. Please copy it manually.");
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
