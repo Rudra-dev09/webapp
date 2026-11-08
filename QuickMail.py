@@ -17,5 +17,19 @@ def create_inbox():
     web_url=data["webUrl"]
     return render_template("QuickMail.html",email=email,web_url=web_url)
 
+@app.route("/api/create", methods=["POST"])
+def api_create():
+    # Generate temporary email here
+    API="https://dummyinbox.com/api/v1"
+    response=requests.post(f"{API}/inboxes",timeout=20)
+    response.raise_for_status()
+    data=response.json()
+    email=data["address"]
+    web_url=data["webUrl"]
+    return {
+        "email": email,
+        "link": web_url
+    }
+
 if __name__=="__main__":
     app.run(host="0.0.0.0",port="5000")
